@@ -2,9 +2,11 @@ package com.bstirbat.hotelmanagement.layeredarchitecture.config;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -37,7 +39,10 @@ public class SecurityConfiguration {
         .authorizeHttpRequests(request -> request
             .requestMatchers("/authentications/login/**").permitAll()
             .requestMatchers("/authentications/signup/**").permitAll()
-            .requestMatchers("/test").permitAll()
+
+            .requestMatchers(HttpMethod.GET, "/test").permitAll()
+            .requestMatchers(HttpMethod.POST, "/test").hasRole(Role.STAFF.name())
+
             .anyRequest().authenticated())
         .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
         .authenticationProvider(authenticationProvider()).addFilterBefore(
