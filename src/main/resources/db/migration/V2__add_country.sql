@@ -1,0 +1,5 @@
+CREATE TABLE country(
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    country_code VARCHAR(2) NOT NULL UNIQUE
+);

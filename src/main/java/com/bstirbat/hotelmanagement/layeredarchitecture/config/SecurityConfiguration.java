@@ -43,6 +43,8 @@ public class SecurityConfiguration {
             .requestMatchers(HttpMethod.GET, "/test").permitAll()
             .requestMatchers(HttpMethod.POST, "/test").hasRole(Role.STAFF.name())
 
+            .requestMatchers("/countries").hasRole(Role.ADMIN.name())
+
             .anyRequest().authenticated())
         .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
         .authenticationProvider(authenticationProvider()).addFilterBefore(
