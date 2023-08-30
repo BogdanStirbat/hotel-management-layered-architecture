@@ -1,5 +1,6 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.service.impl;
 
+import com.bstirbat.hotelmanagement.layeredarchitecture.mapper.CountryMapper;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.CountryCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Country;
 import com.bstirbat.hotelmanagement.layeredarchitecture.repository.CountryRepository;
@@ -23,9 +24,7 @@ public class CountryServiceImpl implements CountryService {
 
   @Override
   public Country create(@NotNull @Valid CountryCreateDto createDto) {
-    Country country = new Country();
-    country.setName(createDto.getName());
-    country.setCountryCode(createDto.getCountryCode());
+    Country country = CountryMapper.INSTANCE.toEntity(createDto);
 
     return countryRepository.save(country);
   }
