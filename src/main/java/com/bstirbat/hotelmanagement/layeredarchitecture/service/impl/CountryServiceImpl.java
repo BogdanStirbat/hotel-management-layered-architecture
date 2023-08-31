@@ -23,6 +23,13 @@ public class CountryServiceImpl implements CountryService {
   }
 
   @Override
+  public Country getById(@NotNull Long id) {
+
+    return countryRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException(String.format("Could not find country with id %s", id)));
+  }
+
+  @Override
   public Country create(@NotNull @Valid CountryCreateDto createDto) {
     Country country = CountryMapper.INSTANCE.toEntity(createDto);
 
