@@ -4,10 +4,14 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.Countr
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Country;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
 public interface CountryService {
+
+  Page<Country> findAll(@NotNull Pageable pageable);
 
   Country getById(@NotNull Long id);
 
