@@ -3,7 +3,7 @@ package com.bstirbat.hotelmanagement.layeredarchitecture.service.impl;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.AuthenticationRequest;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.SignUpRequest;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.response.AuthenticationResponse;
-import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Role;
+import com.bstirbat.hotelmanagement.layeredarchitecture.enums.Role;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.User;
 import com.bstirbat.hotelmanagement.layeredarchitecture.service.AuthenticationService;
 import com.bstirbat.hotelmanagement.layeredarchitecture.service.JwtService;

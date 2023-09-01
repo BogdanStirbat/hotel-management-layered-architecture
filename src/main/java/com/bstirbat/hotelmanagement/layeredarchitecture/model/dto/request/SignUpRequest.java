@@ -1,6 +1,6 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request;
 
-import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Role;
+import com.bstirbat.hotelmanagement.layeredarchitecture.enums.Role;
 
 public class SignUpRequest {
 

@@ -1,5 +1,6 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.model.entity;
 
+import com.bstirbat.hotelmanagement.layeredarchitecture.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

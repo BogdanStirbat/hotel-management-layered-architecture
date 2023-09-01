@@ -1,6 +1,6 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.controller;
 
-import static com.bstirbat.hotelmanagement.layeredarchitecture.constant.Paths.COUNTRIES;
+import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.COUNTRIES;
 import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 
 import com.bstirbat.hotelmanagement.layeredarchitecture.mapper.CountryMapper;

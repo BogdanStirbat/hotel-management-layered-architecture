@@ -1,9 +1,9 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.config;
 
-import static com.bstirbat.hotelmanagement.layeredarchitecture.constant.Paths.COUNTRIES;
+import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.COUNTRIES;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
-import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Role;
+import com.bstirbat.hotelmanagement.layeredarchitecture.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

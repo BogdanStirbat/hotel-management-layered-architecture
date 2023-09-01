@@ -1,4 +1,4 @@
-package com.bstirbat.hotelmanagement.layeredarchitecture.model.entity;
+package com.bstirbat.hotelmanagement.layeredarchitecture.enums;
 
 import java.util.Set;
 

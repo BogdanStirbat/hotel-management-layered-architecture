@@ -1,4 +1,4 @@
-package com.bstirbat.hotelmanagement.layeredarchitecture.constant;
+package com.bstirbat.hotelmanagement.layeredarchitecture.constants;
 
 public class Paths {
 
