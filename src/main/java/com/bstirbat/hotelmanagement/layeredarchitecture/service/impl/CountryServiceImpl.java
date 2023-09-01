@@ -1,5 +1,6 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.service.impl;
 
+import com.bstirbat.hotelmanagement.layeredarchitecture.exceptions.ResourceNotFoundException;
 import com.bstirbat.hotelmanagement.layeredarchitecture.mapper.CountryMapper;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.CountryCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Country;
@@ -13,8 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-@Validated
 @Service
+@Validated
 public class CountryServiceImpl implements CountryService {
 
   private final CountryRepository countryRepository;
@@ -34,7 +35,7 @@ public class CountryServiceImpl implements CountryService {
   public Country getById(@NotNull Long id) {
 
     return countryRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException(String.format("Could not find country with id %s", id)));
+        .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find country with id %s", id)));
   }
 
   @Override
