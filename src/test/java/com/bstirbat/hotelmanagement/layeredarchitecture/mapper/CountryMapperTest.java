@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class CountryMapperTest {
 
   @Test
-  void toEntity_isSuccessful() {
+  void toEntity() {
     CountryCreateDto dto = new CountryCreateDto();
     dto.setName("Germany");
     dto.setCountryCode("DE");
@@ -22,7 +22,7 @@ class CountryMapperTest {
   }
 
   @Test
-  void toDto_isSuccessful() {
+  void toDto() {
     Country entity = new Country();
     entity.setId(1L);
     entity.setName("Germany");

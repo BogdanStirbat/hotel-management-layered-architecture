@@ -4,6 +4,9 @@ import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.C
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -17,6 +20,8 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.PageJacksonModule;
 import com.bstirbat.hotelmanagement.layeredarchitecture.config.GlobalExceptionHandler;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.CountryCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.response.CountryDto;
+import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.response.error.ConstraintValidationErrorDto;
+import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.response.error.ErrorDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Country;
 import com.bstirbat.hotelmanagement.layeredarchitecture.service.CountryService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -56,7 +61,7 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  void createCountry_isSuccessful() throws Exception {
+  void createCountry() throws Exception {
     CountryCreateDto createDto = new CountryCreateDto();
     createDto.setName("Germany");
     createDto.setCountryCode("DE");
@@ -80,7 +85,29 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  void getById_isSuccessful() throws Exception {
+  void createCountry_whenInvalidDto() throws Exception {
+    CountryCreateDto createDto = new CountryCreateDto();
+
+    String contentAsString = this.mockMvc
+        .perform(post(COUNTRIES)
+            .content(objectMapper.writeValueAsString(createDto))
+            .contentType(APPLICATION_JSON))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(APPLICATION_JSON))
+        .andReturn()
+        .getResponse()
+        .getContentAsString();
+    ConstraintValidationErrorDto errorDto = objectMapper.readValue(contentAsString, ConstraintValidationErrorDto.class);
+
+    assertEquals(BAD_REQUEST.value(), errorDto.statusCode());
+    assertEquals(2, errorDto.violationErrors().size());
+    assertTrue(errorDto.message().contains("name"));
+    assertTrue(errorDto.message().contains("countryCode"));
+  }
+
+  @Test
+  void getById() throws Exception {
     CountryCreateDto createDto = new CountryCreateDto();
     createDto.setName("Germany");
     createDto.setCountryCode("DE");
@@ -104,7 +131,25 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  void findAll_isSuccessful() throws Exception {
+  void getById_whenInvalidId() throws Exception {
+    long invalidId = 1L;
+
+    String contentAsString = this.mockMvc
+        .perform(get(COUNTRIES + "/" + invalidId)
+            .contentType(APPLICATION_JSON))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(content().contentType(APPLICATION_JSON))
+        .andReturn()
+        .getResponse()
+        .getContentAsString();
+    ErrorDto errorDto = objectMapper.readValue(contentAsString, ErrorDto.class);
+
+    assertEquals(NOT_FOUND.value(), errorDto.statusCode());
+  }
+
+  @Test
+  void findAll() throws Exception {
     CountryCreateDto createDto1 = new CountryCreateDto();
     createDto1.setName("Australia");
     createDto1.setCountryCode("AU");
@@ -157,4 +202,20 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
     assertEquals(country3.getId(), secondResponseList.getContent().get(0).getId());
   }
 
+  @Test
+  void findAll_whenNoCountryExists() throws Exception {
+
+    String contentAsString = this.mockMvc
+        .perform(get(COUNTRIES)
+            .contentType(APPLICATION_JSON))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(APPLICATION_JSON))
+        .andReturn()
+        .getResponse()
+        .getContentAsString();
+    Page<CountryDto> responseList = objectMapper.readValue(contentAsString, new TypeReference<>() {});
+
+    assertEquals(0, responseList.getTotalElements());
+  }
 }
