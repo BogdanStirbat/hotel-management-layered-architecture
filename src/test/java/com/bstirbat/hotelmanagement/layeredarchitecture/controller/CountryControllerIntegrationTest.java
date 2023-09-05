@@ -1,23 +1,18 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.controller;
 
 import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.COUNTRIES;
-import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.bstirbat.hotelmanagement.layeredarchitecture.AbstractIntegrationTest;
 import com.bstirbat.hotelmanagement.layeredarchitecture.PageJacksonModule;
-import com.bstirbat.hotelmanagement.layeredarchitecture.config.GlobalExceptionHandler;
+import com.bstirbat.hotelmanagement.layeredarchitecture.helper.AuthenticationHelper;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.CountryCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.response.CountryDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.response.error.ConstraintValidationErrorDto;
@@ -29,10 +24,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.util.UriComponentsBuilder;
 
 class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
@@ -43,63 +42,64 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
   private CountryService countryService;
 
   @Autowired
-  private CountryController countryController;
+  private TestRestTemplate restTemplate;
 
-  @Autowired
-  private GlobalExceptionHandler globalExceptionHandler;
+  @Value(value="${local.server.port}")
+  private int port;
 
-  private MockMvc mockMvc;
+  private String countriesUrl;
+  private String adminAuthToken;
 
   @BeforeEach
   void init() {
-    this.mockMvc =
-        MockMvcBuilders.standaloneSetup(countryController)
-            .setControllerAdvice(globalExceptionHandler)
-            .build();
-
     objectMapper.registerModule(new PageJacksonModule());
+
+    String url = "http://localhost:" + port;
+    countriesUrl = url + COUNTRIES;
+    AuthenticationHelper authenticationHelper = new AuthenticationHelper(restTemplate, url);
+    adminAuthToken = authenticationHelper.obtainAdminToken();
   }
 
   @Test
-  void createCountry() throws Exception {
+  void createCountry() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(APPLICATION_JSON);
+    headers.setBearerAuth(adminAuthToken);
+
     CountryCreateDto createDto = new CountryCreateDto();
     createDto.setName("Germany");
     createDto.setCountryCode("DE");
 
-    String contentAsString = this.mockMvc
-        .perform(post(COUNTRIES)
-            .content(objectMapper.writeValueAsString(createDto))
-            .contentType(APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isCreated())
-        .andExpect(content().contentType(APPLICATION_JSON))
-        .andExpect(header().string(HttpHeaders.LOCATION, startsWith(COUNTRIES)))
-        .andReturn()
-        .getResponse()
-        .getContentAsString();
-    CountryDto responseDto = objectMapper.readValue(contentAsString, CountryDto.class);
+    HttpEntity<CountryCreateDto> entity = new HttpEntity<>(createDto, headers);
 
+    ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, entity, CountryDto.class);
+
+    assertEquals(CREATED, responseEntity.getStatusCode());
+    assertTrue(responseEntity.getHeaders().get(HttpHeaders.LOCATION).get(0).startsWith(COUNTRIES));
+
+    CountryDto responseDto = responseEntity.getBody();
+    assertNotNull(responseDto);
     assertNotNull(responseDto.getId());
     assertEquals(createDto.getName(), responseDto.getName());
     assertEquals(createDto.getCountryCode(), responseDto.getCountryCode());
   }
 
   @Test
-  void createCountry_whenInvalidDto() throws Exception {
+  void createCountry_whenInvalidDto() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(APPLICATION_JSON);
+    headers.setBearerAuth(adminAuthToken);
+
     CountryCreateDto createDto = new CountryCreateDto();
 
-    String contentAsString = this.mockMvc
-        .perform(post(COUNTRIES)
-            .content(objectMapper.writeValueAsString(createDto))
-            .contentType(APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isBadRequest())
-        .andExpect(content().contentType(APPLICATION_JSON))
-        .andReturn()
-        .getResponse()
-        .getContentAsString();
-    ConstraintValidationErrorDto errorDto = objectMapper.readValue(contentAsString, ConstraintValidationErrorDto.class);
+    HttpEntity<CountryCreateDto> entity = new HttpEntity<>(createDto, headers);
 
+    ResponseEntity<ConstraintValidationErrorDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, entity, ConstraintValidationErrorDto.class);
+
+    assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
+
+    ConstraintValidationErrorDto errorDto = responseEntity.getBody();
+    assertNotNull(errorDto);
     assertEquals(BAD_REQUEST.value(), errorDto.statusCode());
     assertEquals(2, errorDto.violationErrors().size());
     assertTrue(errorDto.message().contains("name"));
@@ -107,44 +107,47 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  void getById() throws Exception {
+  void getById() {
     CountryCreateDto createDto = new CountryCreateDto();
     createDto.setName("Germany");
     createDto.setCountryCode("DE");
 
     Country country = countryService.create(createDto);
 
-    String contentAsString = this.mockMvc
-        .perform(get(COUNTRIES + "/" + country.getId())
-            .contentType(APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(APPLICATION_JSON))
-        .andReturn()
-        .getResponse()
-        .getContentAsString();
-    CountryDto responseDto = objectMapper.readValue(contentAsString, CountryDto.class);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(APPLICATION_JSON);
+    headers.setBearerAuth(adminAuthToken);
 
+    HttpEntity<String> entity = new HttpEntity<>("", headers);
+
+    ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl+ "/" + country.getId(), HttpMethod.GET, entity, CountryDto.class);
+
+    assertEquals(OK, responseEntity.getStatusCode());
+
+    CountryDto responseDto = responseEntity.getBody();
+
+    assertNotNull(responseDto);
     assertEquals(country.getId(), responseDto.getId());
     assertEquals(country.getName(), responseDto.getName());
     assertEquals(country.getCountryCode(), responseDto.getCountryCode());
   }
 
   @Test
-  void getById_whenInvalidId() throws Exception {
+  void getById_whenInvalidId() {
     long invalidId = 1L;
 
-    String contentAsString = this.mockMvc
-        .perform(get(COUNTRIES + "/" + invalidId)
-            .contentType(APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isNotFound())
-        .andExpect(content().contentType(APPLICATION_JSON))
-        .andReturn()
-        .getResponse()
-        .getContentAsString();
-    ErrorDto errorDto = objectMapper.readValue(contentAsString, ErrorDto.class);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(APPLICATION_JSON);
+    headers.setBearerAuth(adminAuthToken);
 
+    HttpEntity<String> entity = new HttpEntity<>("", headers);
+
+    ResponseEntity<ErrorDto> responseEntity = this.restTemplate.exchange(countriesUrl+ "/" + invalidId, HttpMethod.GET, entity, ErrorDto.class);
+
+    assertEquals(NOT_FOUND, responseEntity.getStatusCode());
+
+    ErrorDto errorDto = responseEntity.getBody();
+    assertNotNull(errorDto);
     assertEquals(NOT_FOUND.value(), errorDto.statusCode());
   }
 
@@ -166,37 +169,35 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
     Country country2 = countryService.create(createDto2);
     Country country3 = countryService.create(createDto3);
 
-    String firstContentAsString = this.mockMvc
-        .perform(get(COUNTRIES)
-            .queryParam("page", "0")
-            .queryParam("size", "2")
-            .contentType(APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(APPLICATION_JSON))
-        .andReturn()
-        .getResponse()
-        .getContentAsString();
-    Page<CountryDto> firstResponseList = objectMapper.readValue(firstContentAsString, new TypeReference<>() {});
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(APPLICATION_JSON);
+    headers.setBearerAuth(adminAuthToken);
 
-    String secondContentAsString = this.mockMvc
-        .perform(get(COUNTRIES)
-            .queryParam("page", "1")
-            .queryParam("size", "2")
-            .contentType(APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(APPLICATION_JSON))
-        .andReturn()
-        .getResponse()
-        .getContentAsString();
-    Page<CountryDto> secondResponseList = objectMapper.readValue(secondContentAsString, new TypeReference<>() {});
+    HttpEntity<String> entity = new HttpEntity<>("", headers);
 
+    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(countriesUrl)
+        .queryParam("page", 0)
+        .queryParam("size", 2);
+
+    ResponseEntity<String> firstResponseEntity = this.restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+
+    builder = UriComponentsBuilder.fromHttpUrl(countriesUrl)
+        .queryParam("page", 1)
+        .queryParam("size", 2);
+
+    ResponseEntity<String> secondResponseEntity = this.restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+
+    assertEquals(OK, firstResponseEntity.getStatusCode());
+
+    Page<CountryDto> firstResponseList = objectMapper.readValue(firstResponseEntity.getBody(), new TypeReference<>() {});
     assertEquals(3, firstResponseList.getTotalElements());
     assertEquals(2, firstResponseList.getNumberOfElements());
     assertEquals(country1.getId(), firstResponseList.getContent().get(0).getId());
     assertEquals(country2.getId(), firstResponseList.getContent().get(1).getId());
 
+    assertEquals(OK, secondResponseEntity.getStatusCode());
+
+    Page<CountryDto> secondResponseList = objectMapper.readValue(secondResponseEntity.getBody(), new TypeReference<>() {});
     assertEquals(3, secondResponseList.getTotalElements());
     assertEquals(1, secondResponseList.getNumberOfElements());
     assertEquals(country3.getId(), secondResponseList.getContent().get(0).getId());
@@ -204,18 +205,17 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void findAll_whenNoCountryExists() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(APPLICATION_JSON);
+    headers.setBearerAuth(adminAuthToken);
 
-    String contentAsString = this.mockMvc
-        .perform(get(COUNTRIES)
-            .contentType(APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(APPLICATION_JSON))
-        .andReturn()
-        .getResponse()
-        .getContentAsString();
-    Page<CountryDto> responseList = objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    HttpEntity<String> entity = new HttpEntity<>("", headers);
 
+    ResponseEntity<String> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.GET, entity, String.class);
+
+    assertEquals(OK, responseEntity.getStatusCode());
+
+    Page<CountryDto> responseList = objectMapper.readValue(responseEntity.getBody(), new TypeReference<>() {});
     assertEquals(0, responseList.getTotalElements());
   }
 }
