@@ -44,7 +44,7 @@ public class SecurityConfiguration {
             .requestMatchers(HttpMethod.GET, "/test").permitAll()
             .requestMatchers(HttpMethod.POST, "/test").hasRole(Role.STAFF.name())
 
-            .requestMatchers(COUNTRIES).hasRole(Role.ADMIN.name())
+            .requestMatchers(COUNTRIES + "/**").hasRole(Role.ADMIN.name())
 
             .anyRequest().authenticated())
         .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))

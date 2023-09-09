@@ -7,7 +7,6 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.response.Authe
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 
 public class AuthenticationHelper {
 
