@@ -184,10 +184,6 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void findAll_whenNoCountryExists() throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(APPLICATION_JSON);
-    headers.setBearerAuth(adminAuthToken);
-
     HttpEntity<String> requestEntity = createHttpEntity("", adminAuthToken, APPLICATION_JSON);
     ResponseEntity<String> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.GET, requestEntity, String.class);
 
