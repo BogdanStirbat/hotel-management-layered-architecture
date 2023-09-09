@@ -1,6 +1,7 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.controller;
 
 import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.COUNTRIES;
+import static com.bstirbat.hotelmanagement.layeredarchitecture.utils.HttpEntityUtil.createHttpEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -62,17 +63,12 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void createCountry() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(APPLICATION_JSON);
-    headers.setBearerAuth(adminAuthToken);
-
     CountryCreateDto createDto = new CountryCreateDto();
     createDto.setName("Germany");
     createDto.setCountryCode("DE");
 
-    HttpEntity<CountryCreateDto> entity = new HttpEntity<>(createDto, headers);
-
-    ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, entity, CountryDto.class);
+    HttpEntity<CountryCreateDto> requestEntity = createHttpEntity(createDto, adminAuthToken, APPLICATION_JSON);
+    ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, requestEntity, CountryDto.class);
 
     assertEquals(CREATED, responseEntity.getStatusCode());
     assertTrue(responseEntity.getHeaders().get(HttpHeaders.LOCATION).get(0).startsWith(COUNTRIES));
@@ -90,11 +86,8 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
     headers.setContentType(APPLICATION_JSON);
     headers.setBearerAuth(adminAuthToken);
 
-    CountryCreateDto createDto = new CountryCreateDto();
-
-    HttpEntity<CountryCreateDto> entity = new HttpEntity<>(createDto, headers);
-
-    ResponseEntity<ConstraintValidationErrorDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, entity, ConstraintValidationErrorDto.class);
+    HttpEntity<CountryCreateDto> requestEntity = createHttpEntity(new CountryCreateDto(), adminAuthToken, APPLICATION_JSON);
+    ResponseEntity<ConstraintValidationErrorDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, requestEntity, ConstraintValidationErrorDto.class);
 
     assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
 
@@ -114,13 +107,8 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
     Country country = countryService.create(createDto);
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(APPLICATION_JSON);
-    headers.setBearerAuth(adminAuthToken);
-
-    HttpEntity<String> entity = new HttpEntity<>("", headers);
-
-    ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl+ "/" + country.getId(), HttpMethod.GET, entity, CountryDto.class);
+    HttpEntity<String> requestEntity = createHttpEntity("", adminAuthToken, APPLICATION_JSON);
+    ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl+ "/" + country.getId(), HttpMethod.GET, requestEntity, CountryDto.class);
 
     assertEquals(OK, responseEntity.getStatusCode());
 
@@ -136,13 +124,8 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
   void getById_whenInvalidId() {
     long invalidId = 1L;
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(APPLICATION_JSON);
-    headers.setBearerAuth(adminAuthToken);
-
-    HttpEntity<String> entity = new HttpEntity<>("", headers);
-
-    ResponseEntity<ErrorDto> responseEntity = this.restTemplate.exchange(countriesUrl+ "/" + invalidId, HttpMethod.GET, entity, ErrorDto.class);
+    HttpEntity<String> requestEntity = createHttpEntity("", adminAuthToken, APPLICATION_JSON);
+    ResponseEntity<ErrorDto> responseEntity = this.restTemplate.exchange(countriesUrl+ "/" + invalidId, HttpMethod.GET, requestEntity, ErrorDto.class);
 
     assertEquals(NOT_FOUND, responseEntity.getStatusCode());
 
@@ -169,23 +152,19 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
     Country country2 = countryService.create(createDto2);
     Country country3 = countryService.create(createDto3);
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(APPLICATION_JSON);
-    headers.setBearerAuth(adminAuthToken);
-
-    HttpEntity<String> entity = new HttpEntity<>("", headers);
+    HttpEntity<String> requestEntity = createHttpEntity("", adminAuthToken, APPLICATION_JSON);
 
     UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(countriesUrl)
         .queryParam("page", 0)
         .queryParam("size", 2);
 
-    ResponseEntity<String> firstResponseEntity = this.restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+    ResponseEntity<String> firstResponseEntity = this.restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, requestEntity, String.class);
 
     builder = UriComponentsBuilder.fromHttpUrl(countriesUrl)
         .queryParam("page", 1)
         .queryParam("size", 2);
 
-    ResponseEntity<String> secondResponseEntity = this.restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+    ResponseEntity<String> secondResponseEntity = this.restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, requestEntity, String.class);
 
     assertEquals(OK, firstResponseEntity.getStatusCode());
 
@@ -209,9 +188,8 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
     headers.setContentType(APPLICATION_JSON);
     headers.setBearerAuth(adminAuthToken);
 
-    HttpEntity<String> entity = new HttpEntity<>("", headers);
-
-    ResponseEntity<String> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.GET, entity, String.class);
+    HttpEntity<String> requestEntity = createHttpEntity("", adminAuthToken, APPLICATION_JSON);
+    ResponseEntity<String> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.GET, requestEntity, String.class);
 
     assertEquals(OK, responseEntity.getStatusCode());
 

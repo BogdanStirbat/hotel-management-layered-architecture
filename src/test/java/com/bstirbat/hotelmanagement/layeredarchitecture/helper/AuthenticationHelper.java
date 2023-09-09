@@ -46,12 +46,12 @@ public class AuthenticationHelper {
   public String obtainAuthenticationToken(String username, String password) {
     final String authUrl = url + "/authentications/login";
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(APPLICATION_JSON);
-
     AuthenticationRequest request = new AuthenticationRequest();
     request.setEmail(username);
     request.setPassword(password);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(APPLICATION_JSON);
 
     HttpEntity<AuthenticationRequest> entity = new HttpEntity<>(request, headers);
 
