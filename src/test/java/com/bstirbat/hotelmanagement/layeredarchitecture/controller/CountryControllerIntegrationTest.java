@@ -21,6 +21,7 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.response.error
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.response.error.ErrorDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Country;
 import com.bstirbat.hotelmanagement.layeredarchitecture.service.CountryService;
+import com.bstirbat.hotelmanagement.layeredarchitecture.valuegenerator.CountryGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,9 +67,10 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void createCountry() {
-    CountryCreateDto createDto = new CountryCreateDto();
-    createDto.setName("Germany");
-    createDto.setCountryCode("DE");
+    CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
+        .withName("Germany")
+        .withCountryCode("DE")
+        .build();
 
     HttpEntity<CountryCreateDto> requestEntity = createHttpEntity(createDto, adminAuthToken, APPLICATION_JSON);
     ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, requestEntity, CountryDto.class);
@@ -85,10 +87,6 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void createCountry_whenInvalidDto() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(APPLICATION_JSON);
-    headers.setBearerAuth(adminAuthToken);
-
     HttpEntity<CountryCreateDto> requestEntity = createHttpEntity(new CountryCreateDto(), adminAuthToken, APPLICATION_JSON);
     ResponseEntity<ConstraintValidationErrorDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, requestEntity, ConstraintValidationErrorDto.class);
 
@@ -104,9 +102,10 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void getById() {
-    CountryCreateDto createDto = new CountryCreateDto();
-    createDto.setName("Germany");
-    createDto.setCountryCode("DE");
+    CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
+        .withName("Germany")
+        .withCountryCode("DE")
+        .build();
 
     Country country = countryService.create(createDto);
 
@@ -139,17 +138,20 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void findAll() throws Exception {
-    CountryCreateDto createDto1 = new CountryCreateDto();
-    createDto1.setName("Australia");
-    createDto1.setCountryCode("AU");
+    CountryCreateDto createDto1 = CountryGenerator.CountryCreateDtoBuilder.builder()
+        .withName("Australia")
+        .withCountryCode("AU")
+        .build();
 
-    CountryCreateDto createDto2 = new CountryCreateDto();
-    createDto2.setName("Belgium");
-    createDto2.setCountryCode("BE");
+    CountryCreateDto createDto2 = CountryGenerator.CountryCreateDtoBuilder.builder()
+        .withName("Belgium")
+        .withCountryCode("BE")
+        .build();
 
-    CountryCreateDto createDto3 = new CountryCreateDto();
-    createDto3.setName("Canada");
-    createDto3.setCountryCode("CA");
+    CountryCreateDto createDto3 = CountryGenerator.CountryCreateDtoBuilder.builder()
+        .withName("Canada")
+        .withCountryCode("CA")
+        .build();
 
     Country country1 = countryService.create(createDto1);
     Country country2 = countryService.create(createDto2);
@@ -198,9 +200,10 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void create_whenAnonymousUser() {
-    CountryCreateDto createDto = new CountryCreateDto();
-    createDto.setName("Germany");
-    createDto.setCountryCode("DE");
+    CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
+        .withName("Germany")
+        .withCountryCode("DE")
+        .build();
 
     HttpEntity<CountryCreateDto> requestEntity = createHttpEntity(createDto, null, APPLICATION_JSON);
     ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, requestEntity, CountryDto.class);
@@ -226,9 +229,10 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void create_whenStaffUser() {
-    CountryCreateDto createDto = new CountryCreateDto();
-    createDto.setName("Germany");
-    createDto.setCountryCode("DE");
+    CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
+        .withName("Germany")
+        .withCountryCode("DE")
+        .build();
 
     HttpEntity<CountryCreateDto> requestEntity = createHttpEntity(createDto, authenticationHelper.obtainStaffToken(), APPLICATION_JSON);
     ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, requestEntity, CountryDto.class);
@@ -254,9 +258,10 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void create_whenClientUser() {
-    CountryCreateDto createDto = new CountryCreateDto();
-    createDto.setName("Germany");
-    createDto.setCountryCode("DE");
+    CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
+        .withName("Germany")
+        .withCountryCode("DE")
+        .build();
 
     HttpEntity<CountryCreateDto> requestEntity = createHttpEntity(createDto, authenticationHelper.obtainClientToken(), APPLICATION_JSON);
     ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, requestEntity, CountryDto.class);

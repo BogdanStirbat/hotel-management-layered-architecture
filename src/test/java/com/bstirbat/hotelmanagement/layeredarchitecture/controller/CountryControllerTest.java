@@ -12,6 +12,7 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.Countr
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.response.CountryDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Country;
 import com.bstirbat.hotelmanagement.layeredarchitecture.service.CountryService;
+import com.bstirbat.hotelmanagement.layeredarchitecture.valuegenerator.CountryGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
@@ -31,14 +32,16 @@ class CountryControllerTest {
 
   @Test
   void createCountry() {
-    CountryCreateDto createDto = new CountryCreateDto();
-    createDto.setName("Germany");
-    createDto.setCountryCode("DE");
+    CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
+        .withName("Germany")
+        .withCountryCode("DE")
+        .build();
 
-    Country country = new Country();
-    country.setId(1L);
-    country.setName("Germany");
-    country.setCountryCode("DE");
+    Country country = CountryGenerator.CountryBuilder.builder()
+        .withId(1L)
+        .withName("Germany")
+        .withCountryCode("DE")
+        .build();
 
     when(countryService.create(any())).thenReturn(country);
 
@@ -54,10 +57,11 @@ class CountryControllerTest {
 
   @Test
   void getById() {
-    Country country = new Country();
-    country.setId(1L);
-    country.setName("Germany");
-    country.setCountryCode("DE");
+    Country country = CountryGenerator.CountryBuilder.builder()
+        .withId(1L)
+        .withName("Germany")
+        .withCountryCode("DE")
+        .build();
 
     when(countryService.getById(1L)).thenReturn(country);
 

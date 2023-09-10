@@ -12,6 +12,7 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.Countr
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Country;
 import com.bstirbat.hotelmanagement.layeredarchitecture.repository.CountryRepository;
 import com.bstirbat.hotelmanagement.layeredarchitecture.service.impl.CountryServiceImpl;
+import com.bstirbat.hotelmanagement.layeredarchitecture.valuegenerator.CountryGenerator;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,14 +32,16 @@ class CountryServiceTest {
 
   @Test
   void create() {
-    CountryCreateDto createDto = new CountryCreateDto();
-    createDto.setName("Germany");
-    createDto.setCountryCode("DE");
+    CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
+        .withName("Germany")
+        .withCountryCode("DE")
+        .build();
 
-    Country country = new Country();
-    country.setId(1L);
-    country.setName("Germany");
-    country.setCountryCode("DE");
+    Country country = CountryGenerator.CountryBuilder.builder()
+        .withId(1L)
+        .withName("Germany")
+        .withCountryCode("DE")
+        .build();
 
     when(countryRepository.save(any())).thenReturn(country);
 
@@ -51,10 +54,11 @@ class CountryServiceTest {
 
   @Test
   void getById() {
-    Country country = new Country();
-    country.setId(1L);
-    country.setName("Germany");
-    country.setCountryCode("DE");
+    Country country = CountryGenerator.CountryBuilder.builder()
+        .withId(1L)
+        .withName("Germany")
+        .withCountryCode("DE")
+        .build();
 
     when(countryRepository.findById(1L)).thenReturn(Optional.of(country));
 

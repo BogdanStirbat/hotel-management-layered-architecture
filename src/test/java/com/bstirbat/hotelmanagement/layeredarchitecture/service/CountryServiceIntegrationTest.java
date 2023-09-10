@@ -9,6 +9,7 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.AbstractIntegrationTest;
 import com.bstirbat.hotelmanagement.layeredarchitecture.exceptions.ResourceNotFoundException;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.CountryCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Country;
+import com.bstirbat.hotelmanagement.layeredarchitecture.valuegenerator.CountryGenerator;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,10 @@ class CountryServiceIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void createCountry() {
-    CountryCreateDto createDto = new CountryCreateDto();
-    createDto.setName("Germany");
-    createDto.setCountryCode("DE");
+    CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
+        .withName("Germany")
+        .withCountryCode("DE")
+        .build();
 
     Country country = countryService.create(createDto);
 
@@ -44,9 +46,10 @@ class CountryServiceIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void createCountry_whenInvalidCountryCode() {
-    CountryCreateDto createDto = new CountryCreateDto();
-    createDto.setName("Germany");
-    createDto.setCountryCode("DE1");
+    CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
+        .withName("Germany")
+        .withCountryCode("DE1")
+        .build();
 
     ConstraintViolationException ex = assertThrows(ConstraintViolationException.class,
         () -> countryService.create(createDto));
@@ -62,9 +65,10 @@ class CountryServiceIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void getByd() {
-    CountryCreateDto createDto = new CountryCreateDto();
-    createDto.setName("Germany");
-    createDto.setCountryCode("DE");
+    CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
+        .withName("Germany")
+        .withCountryCode("DE")
+        .build();
 
     Country country = countryService.create(createDto);
 
@@ -87,9 +91,10 @@ class CountryServiceIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void findAll() {
-    CountryCreateDto createDto = new CountryCreateDto();
-    createDto.setName("Germany");
-    createDto.setCountryCode("DE");
+    CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
+        .withName("Germany")
+        .withCountryCode("DE")
+        .build();
 
     countryService.create(createDto);
 
