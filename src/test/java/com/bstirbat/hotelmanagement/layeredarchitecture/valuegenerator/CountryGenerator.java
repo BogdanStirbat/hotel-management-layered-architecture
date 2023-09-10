@@ -73,6 +73,4 @@ public class CountryGenerator {
       return country;
     }
   }
-
-
 }

@@ -32,6 +32,7 @@ class CountryControllerTest {
 
   @Test
   void createCountry() {
+    // given
     CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
         .withName("Germany")
         .withCountryCode("DE")
@@ -45,7 +46,10 @@ class CountryControllerTest {
 
     when(countryService.create(any())).thenReturn(country);
 
+    // when
     ResponseEntity<CountryDto> responseEntity = countryController.create(createDto);
+
+    // then
     assertEquals(CREATED, responseEntity.getStatusCode());
 
     CountryDto responseDto = responseEntity.getBody();
@@ -57,6 +61,7 @@ class CountryControllerTest {
 
   @Test
   void getById() {
+    // given
     Country country = CountryGenerator.CountryBuilder.builder()
         .withId(1L)
         .withName("Germany")
@@ -65,7 +70,10 @@ class CountryControllerTest {
 
     when(countryService.getById(1L)).thenReturn(country);
 
+    // when
     ResponseEntity<CountryDto> responseEntity = countryController.getById(1L);
+
+    // then
     assertEquals(OK, responseEntity.getStatusCode());
 
     CountryDto responseDto = responseEntity.getBody();
@@ -77,8 +85,10 @@ class CountryControllerTest {
 
   @Test
   void findAll() {
+    // when
     when(countryService.findAll(any())).thenReturn(Page.empty());
 
+    // then
     ResponseEntity<Page<CountryDto>> responseEntity = countryController.findAll(0, 20);
     assertEquals(OK, responseEntity.getStatusCode());
   }

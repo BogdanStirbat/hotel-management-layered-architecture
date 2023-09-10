@@ -32,6 +32,7 @@ class CountryServiceTest {
 
   @Test
   void create() {
+    // given
     CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
         .withName("Germany")
         .withCountryCode("DE")
@@ -45,8 +46,10 @@ class CountryServiceTest {
 
     when(countryRepository.save(any())).thenReturn(country);
 
+    // when
     Country createdCountry = countryService.create(createDto);
 
+    // then
     assertEquals(country.getId(), createdCountry.getId());
     assertEquals(country.getName(), createdCountry.getName());
     assertEquals(country.getCountryCode(), createdCountry.getCountryCode());
@@ -54,6 +57,7 @@ class CountryServiceTest {
 
   @Test
   void getById() {
+    // given
     Country country = CountryGenerator.CountryBuilder.builder()
         .withId(1L)
         .withName("Germany")
@@ -62,8 +66,10 @@ class CountryServiceTest {
 
     when(countryRepository.findById(1L)).thenReturn(Optional.of(country));
 
+    // when
     Country retrievedCountry = countryService.getById(1L);
 
+    // then
     assertEquals(country.getId(), retrievedCountry.getId());
     assertEquals(country.getName(), retrievedCountry.getName());
     assertEquals(country.getCountryCode(), retrievedCountry.getCountryCode());
@@ -71,19 +77,24 @@ class CountryServiceTest {
 
   @Test
   void getById_whenNoCountryFound() {
+    // given
     when(countryRepository.findById(1L)).thenReturn(Optional.empty());
 
+    // when & then
     assertThrows(ResourceNotFoundException.class, () -> countryService.getById(1L));
   }
 
   @Test
   void findAll() {
+    // given
     Page<Country> page = Page.empty();
 
     when(countryRepository.findAll(any(Pageable.class))).thenReturn(page);
 
+    // when
     Page<Country> countries = countryService.findAll(Pageable.unpaged());
 
+    // then
     assertTrue(countries.isEmpty());
   }
 }

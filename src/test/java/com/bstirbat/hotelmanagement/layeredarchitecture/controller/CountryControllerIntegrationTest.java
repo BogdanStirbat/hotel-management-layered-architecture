@@ -67,14 +67,17 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void createCountry() {
+    // given
     CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
         .withName("Germany")
         .withCountryCode("DE")
         .build();
 
+    // when
     HttpEntity<CountryCreateDto> requestEntity = createHttpEntity(createDto, adminAuthToken, APPLICATION_JSON);
     ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, requestEntity, CountryDto.class);
 
+    // then
     assertEquals(CREATED, responseEntity.getStatusCode());
     assertTrue(responseEntity.getHeaders().get(HttpHeaders.LOCATION).get(0).startsWith(COUNTRIES));
 
@@ -87,9 +90,11 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void createCountry_whenInvalidDto() {
+    // when
     HttpEntity<CountryCreateDto> requestEntity = createHttpEntity(new CountryCreateDto(), adminAuthToken, APPLICATION_JSON);
     ResponseEntity<ConstraintValidationErrorDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, requestEntity, ConstraintValidationErrorDto.class);
 
+    // then
     assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
 
     ConstraintValidationErrorDto errorDto = responseEntity.getBody();
@@ -102,6 +107,7 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void getById() {
+    // given
     CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
         .withName("Germany")
         .withCountryCode("DE")
@@ -109,9 +115,11 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
     Country country = countryService.create(createDto);
 
+    // when
     HttpEntity<String> requestEntity = createHttpEntity("", adminAuthToken, APPLICATION_JSON);
     ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl+ "/" + country.getId(), HttpMethod.GET, requestEntity, CountryDto.class);
 
+    // then
     assertEquals(OK, responseEntity.getStatusCode());
 
     CountryDto responseDto = responseEntity.getBody();
@@ -124,11 +132,14 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void getById_whenInvalidId() {
+    // given
     long invalidId = 1L;
 
+    // when
     HttpEntity<String> requestEntity = createHttpEntity("", adminAuthToken, APPLICATION_JSON);
     ResponseEntity<ErrorDto> responseEntity = this.restTemplate.exchange(countriesUrl+ "/" + invalidId, HttpMethod.GET, requestEntity, ErrorDto.class);
 
+    // then
     assertEquals(NOT_FOUND, responseEntity.getStatusCode());
 
     ErrorDto errorDto = responseEntity.getBody();
@@ -138,6 +149,7 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void findAll() throws Exception {
+    // given
     CountryCreateDto createDto1 = CountryGenerator.CountryCreateDtoBuilder.builder()
         .withName("Australia")
         .withCountryCode("AU")
@@ -157,6 +169,8 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
     Country country2 = countryService.create(createDto2);
     Country country3 = countryService.create(createDto3);
 
+    // when
+
     HttpEntity<String> requestEntity = createHttpEntity("", adminAuthToken, APPLICATION_JSON);
 
     UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(countriesUrl)
@@ -171,6 +185,7 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
     ResponseEntity<String> secondResponseEntity = this.restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, requestEntity, String.class);
 
+    // then
     assertEquals(OK, firstResponseEntity.getStatusCode());
 
     Page<CountryDto> firstResponseList = objectMapper.readValue(firstResponseEntity.getBody(), new TypeReference<>() {});
@@ -189,9 +204,11 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void findAll_whenNoCountryExists() throws Exception {
+    // when
     HttpEntity<String> requestEntity = createHttpEntity("", adminAuthToken, APPLICATION_JSON);
     ResponseEntity<String> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.GET, requestEntity, String.class);
 
+    // then
     assertEquals(OK, responseEntity.getStatusCode());
 
     Page<CountryDto> responseList = objectMapper.readValue(responseEntity.getBody(), new TypeReference<>() {});
@@ -200,88 +217,109 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void create_whenAnonymousUser() {
+    // given
     CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
         .withName("Germany")
         .withCountryCode("DE")
         .build();
 
+    // when
     HttpEntity<CountryCreateDto> requestEntity = createHttpEntity(createDto, null, APPLICATION_JSON);
     ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, requestEntity, CountryDto.class);
 
+    // then
     assertEquals(FORBIDDEN, responseEntity.getStatusCode());
   }
 
   @Test
   void getById_whenAnonymousUser() {
+    // when
     HttpEntity<String> requestEntity = createHttpEntity("", null, APPLICATION_JSON);
     ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl+ "/1", HttpMethod.GET, requestEntity, CountryDto.class);
 
+    // then
     assertEquals(FORBIDDEN, responseEntity.getStatusCode());
   }
 
   @Test
   void findAll_whenAnonymousUser() {
+    // when
     HttpEntity<String> requestEntity = createHttpEntity("", null, APPLICATION_JSON);
     ResponseEntity<String> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.GET, requestEntity, String.class);
 
+    // then
     assertEquals(FORBIDDEN, responseEntity.getStatusCode());
   }
 
   @Test
   void create_whenStaffUser() {
+    // given
     CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
         .withName("Germany")
         .withCountryCode("DE")
         .build();
 
+    // when
     HttpEntity<CountryCreateDto> requestEntity = createHttpEntity(createDto, authenticationHelper.obtainStaffToken(), APPLICATION_JSON);
     ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, requestEntity, CountryDto.class);
 
+    // then
     assertEquals(FORBIDDEN, responseEntity.getStatusCode());
   }
 
   @Test
   void getById_whenStaffUser() {
+    // when
     HttpEntity<String> requestEntity = createHttpEntity("", authenticationHelper.obtainStaffToken(), APPLICATION_JSON);
     ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl+ "/1", HttpMethod.GET, requestEntity, CountryDto.class);
 
+    // then
     assertEquals(FORBIDDEN, responseEntity.getStatusCode());
   }
 
   @Test
   void findAll_whenStaffUser() {
+    // when
     HttpEntity<String> requestEntity = createHttpEntity("", authenticationHelper.obtainStaffToken(), APPLICATION_JSON);
     ResponseEntity<String> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.GET, requestEntity, String.class);
 
+    // then
     assertEquals(FORBIDDEN, responseEntity.getStatusCode());
   }
 
   @Test
   void create_whenClientUser() {
+    // given
     CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
         .withName("Germany")
         .withCountryCode("DE")
         .build();
 
+    // when
     HttpEntity<CountryCreateDto> requestEntity = createHttpEntity(createDto, authenticationHelper.obtainClientToken(), APPLICATION_JSON);
     ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, requestEntity, CountryDto.class);
 
+    // then
     assertEquals(FORBIDDEN, responseEntity.getStatusCode());
   }
 
   @Test
   void getById_whenClientUser() {
+    // when
     HttpEntity<String> requestEntity = createHttpEntity("", authenticationHelper.obtainClientToken(), APPLICATION_JSON);
     ResponseEntity<CountryDto> responseEntity = this.restTemplate.exchange(countriesUrl+ "/1", HttpMethod.GET, requestEntity, CountryDto.class);
 
+    // then
     assertEquals(FORBIDDEN, responseEntity.getStatusCode());
   }
 
   @Test
   void findAll_whenClientUser() {
+    // when
     HttpEntity<String> requestEntity = createHttpEntity("", authenticationHelper.obtainClientToken(), APPLICATION_JSON);
     ResponseEntity<String> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.GET, requestEntity, String.class);
 
+    // then
     assertEquals(FORBIDDEN, responseEntity.getStatusCode());
   }
 }
