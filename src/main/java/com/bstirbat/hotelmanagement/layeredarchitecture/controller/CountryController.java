@@ -34,28 +34,6 @@ public class CountryController {
     this.countryService = countryService;
   }
 
-  @GetMapping
-  public ResponseEntity<Page<CountryDto>> findAll(
-      @RequestParam(name = "page", defaultValue = "0") Integer page,
-      @RequestParam(name = "size", defaultValue = "20") Integer size) {
-
-    Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
-
-    Page<CountryDto> countryDtos = countryService.findAll(pageable)
-        .map(CountryMapper.INSTANCE::toDto);
-
-    return ResponseEntity.ok(countryDtos);
-  }
-
-  @GetMapping("/{id}")
-  public ResponseEntity<CountryDto> getById(@PathVariable Long id) {
-    Country country = countryService.getById(id);
-
-    CountryDto dto = CountryMapper.INSTANCE.toDto(country);
-
-    return ResponseEntity.ok(dto);
-  }
-
   @PostMapping
   public ResponseEntity<CountryDto> create(@RequestBody CountryCreateDto createDto) {
     Country country = countryService.create(createDto);
@@ -68,5 +46,27 @@ public class CountryController {
         .toUri();
 
     return ResponseEntity.created(resourceLocation).body(dto);
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<CountryDto> getById(@PathVariable Long id) {
+    Country country = countryService.getById(id);
+
+    CountryDto dto = CountryMapper.INSTANCE.toDto(country);
+
+    return ResponseEntity.ok(dto);
+  }
+
+  @GetMapping
+  public ResponseEntity<Page<CountryDto>> findAll(
+      @RequestParam(name = "page", defaultValue = "0") Integer page,
+      @RequestParam(name = "size", defaultValue = "20") Integer size) {
+
+    Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
+
+    Page<CountryDto> countryDtos = countryService.findAll(pageable)
+        .map(CountryMapper.INSTANCE::toDto);
+
+    return ResponseEntity.ok(countryDtos);
   }
 }

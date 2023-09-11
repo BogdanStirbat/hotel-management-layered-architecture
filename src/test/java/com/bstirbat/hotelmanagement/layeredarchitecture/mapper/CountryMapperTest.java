@@ -1,6 +1,7 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.CountryCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.response.CountryDto;
@@ -22,6 +23,7 @@ class CountryMapperTest {
     Country entity = CountryMapper.INSTANCE.toEntity(dto);
 
     // then
+    assertNull(entity.getId());
     assertEquals(dto.getName(), entity.getName());
     assertEquals(dto.getCountryCode(), entity.getCountryCode());
   }

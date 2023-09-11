@@ -1,5 +1,6 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.config;
 
+import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.CITIES;
 import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.COUNTRIES;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -45,6 +46,7 @@ public class SecurityConfiguration {
             .requestMatchers(HttpMethod.POST, "/test").hasRole(Role.STAFF.name())
 
             .requestMatchers(COUNTRIES + "/**").hasRole(Role.ADMIN.name())
+            .requestMatchers(CITIES + "/**").hasRole(Role.ADMIN.name())
 
             .anyRequest().authenticated())
         .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))

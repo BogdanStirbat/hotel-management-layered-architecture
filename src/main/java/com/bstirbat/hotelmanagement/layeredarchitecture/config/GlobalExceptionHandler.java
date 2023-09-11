@@ -1,5 +1,6 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.config;
 
+import com.bstirbat.hotelmanagement.layeredarchitecture.exceptions.InvalidDataException;
 import com.bstirbat.hotelmanagement.layeredarchitecture.exceptions.ResourceNotFoundException;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.response.error.ConstraintValidationErrorDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.response.error.ErrorDto;
@@ -20,6 +21,13 @@ public class GlobalExceptionHandler {
   public ErrorDto onResourceNotFoundException(ResourceNotFoundException ex) {
 
     return new ErrorDto(HttpStatus.NOT_FOUND.value(), ex.getMessage(), null);
+  }
+
+  @ExceptionHandler(InvalidDataException.class)
+  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+  public ErrorDto onInvalidDataException(InvalidDataException ex) {
+
+    return new ErrorDto(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
   }
 
   @ExceptionHandler(ConstraintViolationException.class)
