@@ -2,6 +2,7 @@ package com.bstirbat.hotelmanagement.layeredarchitecture.service.impl;
 
 import static com.bstirbat.hotelmanagement.layeredarchitecture.utils.ExceptionWrapperUtils.wrapWithInvalidDataException;
 
+import com.bstirbat.hotelmanagement.layeredarchitecture.exceptions.ResourceNotFoundException;
 import com.bstirbat.hotelmanagement.layeredarchitecture.mapper.CityMapper;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.CityCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.City;
@@ -34,5 +35,12 @@ public class CityServiceImpl implements CityService {
     city.setCountry(wrapWithInvalidDataException(() -> countryService.getById(createDto.getCountryId())));
 
     return cityRepository.save(city);
+  }
+
+  @Override
+  public City getById(@NotNull Long id) {
+
+    return cityRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find city with id %s", id)));
   }
 }

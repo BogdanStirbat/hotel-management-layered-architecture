@@ -11,9 +11,9 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public interface CountryService {
 
-  Page<Country> findAll(@NotNull Pageable pageable);
+  Country create(@NotNull @Valid CountryCreateDto createDto);
 
   Country getById(@NotNull Long id);
 
-  Country create(@NotNull @Valid CountryCreateDto createDto);
+  Page<Country> findAll(@NotNull Pageable pageable);
 }

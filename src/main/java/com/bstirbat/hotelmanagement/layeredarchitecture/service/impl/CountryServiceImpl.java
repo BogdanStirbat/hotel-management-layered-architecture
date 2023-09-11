@@ -26,9 +26,10 @@ public class CountryServiceImpl implements CountryService {
   }
 
   @Override
-  public Page<Country> findAll(@NotNull Pageable pageable) {
+  public Country create(@NotNull @Valid CountryCreateDto createDto) {
+    Country country = CountryMapper.INSTANCE.toEntity(createDto);
 
-    return countryRepository.findAll(pageable);
+    return countryRepository.save(country);
   }
 
   @Override
@@ -39,9 +40,8 @@ public class CountryServiceImpl implements CountryService {
   }
 
   @Override
-  public Country create(@NotNull @Valid CountryCreateDto createDto) {
-    Country country = CountryMapper.INSTANCE.toEntity(createDto);
+  public Page<Country> findAll(@NotNull Pageable pageable) {
 
-    return countryRepository.save(country);
+    return countryRepository.findAll(pageable);
   }
 }
