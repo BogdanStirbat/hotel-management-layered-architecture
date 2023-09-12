@@ -22,7 +22,7 @@ class CountryServiceIntegrationTest extends AbstractIntegrationTest {
   private CountryService countryService;
 
   @Test
-  void createCountry() {
+  void create() {
     // given
     CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
         .withName("Germany")
@@ -39,7 +39,7 @@ class CountryServiceIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  void createCountry_whenInvalidDto() {
+  void create_whenInvalidDto() {
     // when
     ConstraintViolationException ex = assertThrows(ConstraintViolationException.class,
         () -> countryService.create(new CountryCreateDto()));
@@ -50,7 +50,7 @@ class CountryServiceIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  void createCountry_whenInvalidCountryCode() {
+  void create_whenInvalidCountryCode() {
     // given
     CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
         .withName("Germany")
@@ -66,7 +66,7 @@ class CountryServiceIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  void createCountry_whenNullDto() {
+  void create_whenNullDto() {
     // when & then
     assertThrows(ConstraintViolationException.class,
         () -> countryService.create(null));
