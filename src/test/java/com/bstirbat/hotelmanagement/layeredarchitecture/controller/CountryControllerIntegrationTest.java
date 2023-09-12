@@ -66,7 +66,7 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  void createCountry() {
+  void create() {
     // given
     CountryCreateDto createDto = CountryGenerator.CountryCreateDtoBuilder.builder()
         .withName("Germany")
@@ -89,7 +89,7 @@ class CountryControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  void createCountry_whenInvalidDto() {
+  void create_whenInvalidDto() {
     // when
     HttpEntity<CountryCreateDto> requestEntity = createHttpEntity(new CountryCreateDto(), adminAuthToken, APPLICATION_JSON);
     ResponseEntity<ConstraintValidationErrorDto> responseEntity = this.restTemplate.exchange(countriesUrl, HttpMethod.POST, requestEntity, ConstraintValidationErrorDto.class);
