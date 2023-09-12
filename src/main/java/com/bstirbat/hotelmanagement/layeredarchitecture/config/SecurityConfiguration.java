@@ -2,6 +2,7 @@ package com.bstirbat.hotelmanagement.layeredarchitecture.config;
 
 import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.CITIES;
 import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.COUNTRIES;
+import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.STREETS;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import com.bstirbat.hotelmanagement.layeredarchitecture.enums.Role;
@@ -47,6 +48,7 @@ public class SecurityConfiguration {
 
             .requestMatchers(COUNTRIES + "/**").hasRole(Role.ADMIN.name())
             .requestMatchers(CITIES + "/**").hasRole(Role.ADMIN.name())
+            .requestMatchers(STREETS + "/**").hasRole(Role.ADMIN.name())
 
             .anyRequest().authenticated())
         .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))

@@ -1,0 +1,7 @@
+CREATE TABLE street(
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  city_id BIGINT NOT NULL,
+
+  CONSTRAINT fk_street_city FOREIGN KEY (city_id) REFERENCES city (id)
+);
