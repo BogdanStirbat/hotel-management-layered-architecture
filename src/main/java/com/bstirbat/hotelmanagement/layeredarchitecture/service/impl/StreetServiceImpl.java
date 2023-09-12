@@ -12,6 +12,8 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.service.StreetService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -41,5 +43,11 @@ public class StreetServiceImpl implements StreetService {
 
     return streetRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find street with id %s", id)));
+  }
+
+  @Override
+  public Page<Street> findAll(@NotNull Pageable pageable) {
+
+    return streetRepository.findAll(pageable);
   }
 }
