@@ -20,7 +20,7 @@ class StreetMapperTest {
     // given
     StreetCreateDto dto = StreetGenerator.StreetCreateDtoBuilder.builder()
         .withCityId(1L)
-        .withName("Berlin")
+        .withName("Street")
         .build();
 
     // when
