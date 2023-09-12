@@ -111,7 +111,7 @@ class CountryServiceIntegrationTest extends AbstractIntegrationTest {
         .withCountryCode("DE")
         .build();
 
-    countryService.create(createDto);
+    Country country = countryService.create(createDto);
 
     // when
     Page<Country> countries = countryService.findAll(Pageable.unpaged());
@@ -120,9 +120,9 @@ class CountryServiceIntegrationTest extends AbstractIntegrationTest {
     assertEquals(1,  countries.getTotalElements());
 
     Country foundCountry = countries.getContent().get(0);
-    assertNotNull(foundCountry.getId());
-    assertEquals(createDto.getName(), foundCountry.getName());
-    assertEquals(createDto.getCountryCode(), foundCountry.getCountryCode());
+    assertEquals(country.getId(), foundCountry.getId());
+    assertEquals(country.getName(), foundCountry.getName());
+    assertEquals(country.getCountryCode(), foundCountry.getCountryCode());
   }
 
   @Test
