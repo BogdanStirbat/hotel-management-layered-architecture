@@ -11,6 +11,8 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.service.StreetService;
 import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,5 +41,14 @@ public class StreetController {
         .toUri();
 
     return ResponseEntity.created(resourceLocation).body(dto);
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<StreetDto> getById(@PathVariable Long id) {
+    Street street = streetService.getById(id);
+
+    StreetDto dto = StreetMapper.INSTANCE.toDto(street);
+
+    return ResponseEntity.ok(dto);
   }
 }

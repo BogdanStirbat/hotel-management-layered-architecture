@@ -10,4 +10,6 @@ import org.springframework.validation.annotation.Validated;
 public interface StreetService {
 
   Street create(@NotNull @Valid StreetCreateDto createDto);
+
+  Street getById(@NotNull Long id);
 }
