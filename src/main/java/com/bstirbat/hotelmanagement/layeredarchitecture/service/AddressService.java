@@ -10,4 +10,6 @@ import org.springframework.validation.annotation.Validated;
 public interface AddressService {
 
   Address create(@NotNull @Valid AddressCreateDto createDto);
+
+  Address getById(@NotNull Long id);
 }

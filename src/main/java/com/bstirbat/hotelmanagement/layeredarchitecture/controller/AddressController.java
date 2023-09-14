@@ -11,6 +11,8 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.service.AddressService;
 import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,5 +41,14 @@ public class AddressController {
         .toUri();
 
     return ResponseEntity.created(resourceLocation).body(dto);
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<AddressDto> getById(@PathVariable Long id) {
+    Address address = addressService.getById(id);
+
+    AddressDto dto = AddressMapper.INSTANCE.toDto(address);
+
+    return ResponseEntity.ok(dto);
   }
 }

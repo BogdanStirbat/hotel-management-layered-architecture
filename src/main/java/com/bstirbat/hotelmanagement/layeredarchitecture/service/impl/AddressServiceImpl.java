@@ -2,6 +2,7 @@ package com.bstirbat.hotelmanagement.layeredarchitecture.service.impl;
 
 import static com.bstirbat.hotelmanagement.layeredarchitecture.utils.ExceptionWrapperUtils.wrapWithInvalidDataException;
 
+import com.bstirbat.hotelmanagement.layeredarchitecture.exceptions.ResourceNotFoundException;
 import com.bstirbat.hotelmanagement.layeredarchitecture.mapper.AddressMapper;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.AddressCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Address;
@@ -33,5 +34,12 @@ public class AddressServiceImpl implements AddressService {
     address.setStreet(wrapWithInvalidDataException(() -> streetService.getById(createDto.getStreetId())));
 
     return addressRepository.save(address);
+  }
+
+  @Override
+  public Address getById(@NotNull Long id) {
+
+    return addressRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find street with id %s", id)));
   }
 }
