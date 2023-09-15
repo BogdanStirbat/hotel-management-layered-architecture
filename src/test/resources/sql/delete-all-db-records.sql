@@ -4,5 +4,6 @@ DELETE FROM user;
 DELETE FROM country;
 DELETE FROM city;
 DELETE FROM street;
+DELETE FROM address;
 
 SET foreign_key_checks = 1;
