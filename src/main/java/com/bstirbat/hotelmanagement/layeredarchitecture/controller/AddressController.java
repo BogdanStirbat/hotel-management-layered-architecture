@@ -62,7 +62,7 @@ public class AddressController {
       @RequestParam(name = "page", defaultValue = "0") Integer page,
       @RequestParam(name = "size", defaultValue = "20") Integer size) {
 
-    Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
+    Pageable pageable = PageRequest.of(page, size, Sort.by("houseNumber"));
 
     Page<AddressDto> addressDtos = addressService.findAll(pageable)
         .map(AddressMapper.INSTANCE::toDto);
