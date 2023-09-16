@@ -5,5 +5,6 @@ DELETE FROM country;
 DELETE FROM city;
 DELETE FROM street;
 DELETE FROM address;
+DELETE FROM hotel;
 
 SET foreign_key_checks = 1;
