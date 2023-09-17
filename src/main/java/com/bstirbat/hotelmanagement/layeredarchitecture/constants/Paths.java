@@ -6,6 +6,7 @@ public class Paths {
   public static final String CITIES = "/cities";
   public static final String STREETS = "/streets";
   public static final String ADDRESSES = "/addresses";
+  public static final String HOTELS = "/hotels";
 
   private Paths() {
 
