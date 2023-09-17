@@ -9,18 +9,12 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.AddressCreateDto;
-import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.StreetCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.response.AddressDto;
-import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.response.StreetDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Address;
-import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.City;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Street;
 import com.bstirbat.hotelmanagement.layeredarchitecture.service.AddressService;
-import com.bstirbat.hotelmanagement.layeredarchitecture.service.StreetService;
 import com.bstirbat.hotelmanagement.layeredarchitecture.valuegenerator.AddressGenerator;
-import com.bstirbat.hotelmanagement.layeredarchitecture.valuegenerator.CityGenerator;
 import com.bstirbat.hotelmanagement.layeredarchitecture.valuegenerator.StreetGenerator.StreetBuilder;
-import com.bstirbat.hotelmanagement.layeredarchitecture.valuegenerator.StreetGenerator.StreetCreateDtoBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
