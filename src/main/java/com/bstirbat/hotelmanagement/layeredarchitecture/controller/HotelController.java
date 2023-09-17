@@ -62,7 +62,7 @@ public class HotelController {
       @RequestParam(name = "page", defaultValue = "0") Integer page,
       @RequestParam(name = "size", defaultValue = "20") Integer size) {
 
-    Pageable pageable = PageRequest.of(page, size, Sort.by("houseNumber"));
+    Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
 
     Page<HotelDto> hotelDtos = hotelService.findAll(pageable)
         .map(HotelMapper.INSTANCE::toDto);

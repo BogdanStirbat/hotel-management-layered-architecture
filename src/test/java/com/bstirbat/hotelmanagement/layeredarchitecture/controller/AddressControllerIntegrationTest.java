@@ -251,7 +251,7 @@ class AddressControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  void findAll_whenNoStreetExists() throws Exception {
+  void findAll_whenNoAddressExists() throws Exception {
     // when
     HttpEntity<String> requestEntity = createHttpEntity("", adminAuthToken, APPLICATION_JSON);
     ResponseEntity<String> responseEntity = this.restTemplate.exchange(addressesUrl, HttpMethod.GET, requestEntity, String.class);
