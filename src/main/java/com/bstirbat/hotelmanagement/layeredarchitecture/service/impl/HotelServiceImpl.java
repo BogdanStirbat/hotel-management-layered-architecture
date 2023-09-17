@@ -2,6 +2,7 @@ package com.bstirbat.hotelmanagement.layeredarchitecture.service.impl;
 
 import static com.bstirbat.hotelmanagement.layeredarchitecture.utils.ExceptionWrapperUtils.wrapWithInvalidDataException;
 
+import com.bstirbat.hotelmanagement.layeredarchitecture.exceptions.ResourceNotFoundException;
 import com.bstirbat.hotelmanagement.layeredarchitecture.mapper.HotelMapper;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.HotelCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Hotel;
@@ -33,5 +34,12 @@ public class HotelServiceImpl implements HotelService {
     hotel.setAddress(wrapWithInvalidDataException(() -> addressService.getById(createDto.getAddressId())));
 
     return hotelRepository.save(hotel);
+  }
+
+  @Override
+  public Hotel getById(@NotNull Long id) {
+
+    return hotelRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find hotel with id %s", id)));
   }
 }

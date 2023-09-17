@@ -42,7 +42,7 @@ public class AddressServiceImpl implements AddressService {
   public Address getById(@NotNull Long id) {
 
     return addressRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find street with id %s", id)));
+        .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find address with id %s", id)));
   }
 
   @Override

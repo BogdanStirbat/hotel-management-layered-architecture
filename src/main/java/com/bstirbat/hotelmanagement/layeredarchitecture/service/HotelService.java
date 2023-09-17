@@ -10,4 +10,6 @@ import org.springframework.validation.annotation.Validated;
 public interface HotelService {
 
   Hotel create(@NotNull @Valid HotelCreateDto createDto);
+
+  Hotel getById(@NotNull Long id);
 }
