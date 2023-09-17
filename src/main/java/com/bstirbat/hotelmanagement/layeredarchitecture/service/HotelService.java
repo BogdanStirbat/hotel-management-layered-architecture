@@ -4,6 +4,8 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.HotelC
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Hotel;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
@@ -12,4 +14,6 @@ public interface HotelService {
   Hotel create(@NotNull @Valid HotelCreateDto createDto);
 
   Hotel getById(@NotNull Long id);
+
+  Page<Hotel> findAll(@NotNull Pageable pageable);
 }

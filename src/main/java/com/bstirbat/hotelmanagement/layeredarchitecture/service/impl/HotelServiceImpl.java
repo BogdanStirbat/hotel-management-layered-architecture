@@ -12,6 +12,8 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.service.HotelService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -41,5 +43,11 @@ public class HotelServiceImpl implements HotelService {
 
     return hotelRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find hotel with id %s", id)));
+  }
+
+  @Override
+  public Page<Hotel> findAll(@NotNull Pageable pageable) {
+
+    return hotelRepository.findAll(pageable);
   }
 }
