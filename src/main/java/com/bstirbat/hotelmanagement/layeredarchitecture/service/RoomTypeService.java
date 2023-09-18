@@ -10,4 +10,6 @@ import org.springframework.validation.annotation.Validated;
 public interface RoomTypeService {
 
   RoomType create(@NotNull @Valid RoomTypeCreateDto createDto);
+
+  RoomType getById(@NotNull Long id);
 }

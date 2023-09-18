@@ -12,6 +12,8 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.service.RoomTypeService;
 import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,5 +42,14 @@ public class RoomTypeController {
         .toUri();
 
     return ResponseEntity.created(resourceLocation).body(dto);
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<RoomTypeDto> getById(@PathVariable Long id) {
+    RoomType roomType = roomTypeService.getById(id);
+
+    RoomTypeDto dto = RoomTypeMapper.INSTANCE.toDto(roomType);
+
+    return ResponseEntity.ok(dto);
   }
 }

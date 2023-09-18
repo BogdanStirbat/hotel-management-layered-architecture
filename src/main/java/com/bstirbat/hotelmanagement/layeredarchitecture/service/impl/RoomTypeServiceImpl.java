@@ -2,6 +2,7 @@ package com.bstirbat.hotelmanagement.layeredarchitecture.service.impl;
 
 import static com.bstirbat.hotelmanagement.layeredarchitecture.utils.ExceptionWrapperUtils.wrapWithInvalidDataException;
 
+import com.bstirbat.hotelmanagement.layeredarchitecture.exceptions.ResourceNotFoundException;
 import com.bstirbat.hotelmanagement.layeredarchitecture.mapper.RoomTypeMapper;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.RoomTypeCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.RoomType;
@@ -33,5 +34,12 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     roomType.setHotel(wrapWithInvalidDataException(() -> hotelService.getById(createDto.getHotelId())));
 
     return roomTypeRepository.save(roomType);
+  }
+
+  @Override
+  public RoomType getById(@NotNull Long id) {
+
+    return roomTypeRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find room type with id %s", id)));
   }
 }
