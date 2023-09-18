@@ -1,6 +1,5 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.controller;
 
-import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.HOTELS;
 import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.ROOM_TYPES;
 import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 
@@ -41,7 +40,7 @@ public class RoomTypeController {
 
     RoomTypeDto dto = RoomTypeMapper.INSTANCE.toDto(roomType);
 
-    URI resourceLocation = fromPath(HOTELS)
+    URI resourceLocation = fromPath(ROOM_TYPES)
         .pathSegment("{id}")
         .buildAndExpand(roomType.getId())
         .toUri();
