@@ -9,6 +9,8 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.repository.ImageReferenc
 import com.bstirbat.hotelmanagement.layeredarchitecture.service.ImageReferenceService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -35,5 +37,11 @@ public class ImageReferenceServiceImpl implements ImageReferenceService {
 
     return imageReferenceRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find image reference with id %s", id)));
+  }
+
+  @Override
+  public Page<ImageReference> findAll(@NotNull Pageable pageable) {
+
+    return imageReferenceRepository.findAll(pageable);
   }
 }
