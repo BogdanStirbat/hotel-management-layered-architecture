@@ -8,6 +8,7 @@ public class Paths {
   public static final String ADDRESSES = "/addresses";
   public static final String HOTELS = "/hotels";
   public static final String ROOM_TYPES = "/room-types";
+  public static final String IMAGE_REFERENCES = "/image-references";
 
   private Paths() {
 
