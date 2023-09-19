@@ -256,7 +256,7 @@ class RoomTypeControllerIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  void findAll_whenNoHotelExists() throws Exception {
+  void findAll_whenNoImageReferenceExists() throws Exception {
     // when
     HttpEntity<String> requestEntity = createHttpEntity("", adminAuthToken, APPLICATION_JSON);
     ResponseEntity<String> responseEntity = this.restTemplate.exchange(roomTypesUrl, HttpMethod.GET, requestEntity, String.class);
