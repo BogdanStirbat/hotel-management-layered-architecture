@@ -8,5 +8,6 @@ DELETE FROM address;
 DELETE FROM hotel;
 DELETE FROM room_type;
 DELETE FROM image_reference;
+DELETE FROM facility;
 
 SET foreign_key_checks = 1;
