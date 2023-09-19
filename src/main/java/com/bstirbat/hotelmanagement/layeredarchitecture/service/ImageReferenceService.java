@@ -10,4 +10,6 @@ import org.springframework.validation.annotation.Validated;
 public interface ImageReferenceService {
 
   ImageReference create(@NotNull @Valid ImageReferenceCreateDto createDto);
+
+  ImageReference getById(@NotNull Long id);
 }
