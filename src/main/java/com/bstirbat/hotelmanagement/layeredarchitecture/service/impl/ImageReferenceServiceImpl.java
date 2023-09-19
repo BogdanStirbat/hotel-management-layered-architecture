@@ -4,7 +4,6 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.exceptions.ResourceNotFo
 import com.bstirbat.hotelmanagement.layeredarchitecture.mapper.ImageReferenceMapper;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.ImageReferenceCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.ImageReference;
-import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.RoomType;
 import com.bstirbat.hotelmanagement.layeredarchitecture.repository.ImageReferenceRepository;
 import com.bstirbat.hotelmanagement.layeredarchitecture.service.ImageReferenceService;
 import jakarta.validation.constraints.NotNull;
