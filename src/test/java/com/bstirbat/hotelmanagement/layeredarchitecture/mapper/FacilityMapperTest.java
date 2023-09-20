@@ -29,16 +29,16 @@ class FacilityMapperTest {
   @Test
   void toDto() {
     // given
-    Facility imageReference = FacilityGenerator.FacilityBuilder.builder()
+    Facility facility = FacilityGenerator.FacilityBuilder.builder()
         .withId(1L)
         .withName("Free WiFi")
         .build();
 
     // when
-    FacilityDto dto = FacilityMapper.INSTANCE.toDto(imageReference);
+    FacilityDto dto = FacilityMapper.INSTANCE.toDto(facility);
 
     // then
-    assertEquals(dto.getId(), imageReference.getId());
-    assertEquals(dto.getName(), imageReference.getName());
+    assertEquals(dto.getId(), facility.getId());
+    assertEquals(dto.getName(), facility.getName());
   }
 }
