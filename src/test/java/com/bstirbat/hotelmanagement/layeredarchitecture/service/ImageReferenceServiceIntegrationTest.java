@@ -38,8 +38,6 @@ class ImageReferenceServiceIntegrationTest extends AbstractIntegrationTest {
     assertEquals(createDto.getTitle(), imageReference.getTitle());
   }
 
-
-
   @Test
   void create_whenInvalidDto() {
     // when
