@@ -1,8 +1,10 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.service.impl;
 
+import com.bstirbat.hotelmanagement.layeredarchitecture.exceptions.ResourceNotFoundException;
 import com.bstirbat.hotelmanagement.layeredarchitecture.mapper.FacilityMapper;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.FacilityCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Facility;
+import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.ImageReference;
 import com.bstirbat.hotelmanagement.layeredarchitecture.repository.FacilityRepository;
 import com.bstirbat.hotelmanagement.layeredarchitecture.service.FacilityService;
 import jakarta.validation.Valid;
@@ -27,5 +29,12 @@ public class FacilityServiceImpl implements FacilityService {
     Facility imageReference = FacilityMapper.INSTANCE.toEntity(createDto);
 
     return facilityRepository.save(imageReference);
+  }
+
+  @Override
+  public Facility getById(@NotNull Long id) {
+
+    return facilityRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find facility with id %s", id)));
   }
 }

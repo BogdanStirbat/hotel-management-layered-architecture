@@ -10,4 +10,6 @@ import org.springframework.validation.annotation.Validated;
 public interface FacilityService {
 
   Facility create(@NotNull @Valid FacilityCreateDto createDto);
+
+  Facility getById(@NotNull Long id);
 }
