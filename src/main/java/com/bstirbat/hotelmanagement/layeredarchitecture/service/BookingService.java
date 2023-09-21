@@ -11,4 +11,6 @@ import org.springframework.validation.annotation.Validated;
 public interface BookingService {
 
   Booking create(@NotNull @Valid BookingCreateDto createDto, @NotNull User user);
+
+  Booking getById(@NotNull Long id);
 }
