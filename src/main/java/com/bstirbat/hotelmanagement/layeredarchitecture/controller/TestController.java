@@ -1,5 +1,7 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.controller;
 
+import static com.bstirbat.hotelmanagement.layeredarchitecture.utils.UserUtils.extractUser;
+
 import com.bstirbat.hotelmanagement.layeredarchitecture.config.user.UserDetailsImpl;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.User;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +23,5 @@ public class TestController {
   public ResponseEntity<String> testPost(Authentication authentication) {
     User user = extractUser(authentication);
     return ResponseEntity.ok("test POST");
-  }
-
-  private User extractUser(Authentication authentication) {
-    if (authentication == null) {
-      return null;
-    }
-    return ((UserDetailsImpl) authentication.getPrincipal()).getUser();
   }
 }

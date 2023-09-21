@@ -10,6 +10,7 @@ public class Paths {
   public static final String ROOM_TYPES = "/room-types";
   public static final String IMAGE_REFERENCES = "/image-references";
   public static final String FACILITIES = "/facilities";
+  public static final String BOOKINGS = "/bookings";
 
   private Paths() {
 
