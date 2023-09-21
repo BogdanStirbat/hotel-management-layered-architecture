@@ -64,9 +64,9 @@ public class RoomTypeController {
 
     Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
 
-    Page<RoomTypeDto> hotelDtos = roomTypeService.findAll(pageable)
+    Page<RoomTypeDto> roomTypeDtos = roomTypeService.findAll(pageable)
         .map(RoomTypeMapper.INSTANCE::toDto);
 
-    return ResponseEntity.ok(hotelDtos);
+    return ResponseEntity.ok(roomTypeDtos);
   }
 }

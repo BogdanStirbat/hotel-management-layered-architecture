@@ -5,6 +5,8 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Booking;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
@@ -13,4 +15,6 @@ public interface BookingService {
   Booking create(@NotNull @Valid BookingCreateDto createDto, @NotNull User user);
 
   Booking getById(@NotNull Long id);
+
+  Page<Booking> findAll(@NotNull Pageable pageable);
 }

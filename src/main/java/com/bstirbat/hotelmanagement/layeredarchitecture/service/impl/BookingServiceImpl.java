@@ -6,7 +6,6 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.exceptions.ResourceNotFo
 import com.bstirbat.hotelmanagement.layeredarchitecture.mapper.BookingMapper;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.BookingCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Booking;
-import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.RoomType;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.User;
 import com.bstirbat.hotelmanagement.layeredarchitecture.repository.BookingRepository;
 import com.bstirbat.hotelmanagement.layeredarchitecture.service.BookingService;
@@ -14,6 +13,8 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.service.RoomTypeService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -44,5 +45,11 @@ public class BookingServiceImpl implements BookingService {
 
     return bookingRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find booking with id %s", id)));
+  }
+
+  @Override
+  public Page<Booking> findAll(@NotNull Pageable pageable) {
+
+    return bookingRepository.findAll(pageable);
   }
 }
