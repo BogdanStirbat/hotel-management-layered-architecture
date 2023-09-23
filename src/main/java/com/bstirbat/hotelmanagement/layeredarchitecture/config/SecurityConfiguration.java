@@ -1,6 +1,7 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.config;
 
 import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.ADDRESSES;
+import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.BOOKINGS;
 import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.CITIES;
 import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.COUNTRIES;
 import static com.bstirbat.hotelmanagement.layeredarchitecture.constants.Paths.FACILITIES;
@@ -59,6 +60,7 @@ public class SecurityConfiguration {
             .requestMatchers(ROOM_TYPES + "/**").hasRole(Role.ADMIN.name())
             .requestMatchers(IMAGE_REFERENCES + "/**").hasRole(Role.ADMIN.name())
             .requestMatchers(FACILITIES + "/**").hasRole(Role.ADMIN.name())
+            .requestMatchers(BOOKINGS + "/**").hasRole(Role.ADMIN.name())
 
             .anyRequest().authenticated())
         .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
