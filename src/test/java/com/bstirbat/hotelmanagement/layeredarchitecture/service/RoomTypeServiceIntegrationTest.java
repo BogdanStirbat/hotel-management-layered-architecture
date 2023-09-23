@@ -80,7 +80,7 @@ class RoomTypeServiceIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  void create_whenInvalidAddressId() {
+  void create_whenInvalidHotelId() {
     // given
     RoomTypeCreateDto createDto = RoomTypeGenerator.RoomTypeCreateDtoBuilder.builder()
         .withHotelId(-1L)
