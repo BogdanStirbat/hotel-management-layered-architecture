@@ -23,10 +23,10 @@ public class Review {
   @Column(name = "review_date", nullable = false)
   private LocalDate reviewDate;
 
-  @Column(name = "title", nullable = false)
+  @Column(name = "title", nullable = true)
   private String title;
 
-  @Column(name = "body", nullable = false)
+  @Column(name = "body", nullable = true)
   private String body;
 
   @Column(name = "rating", nullable = false)

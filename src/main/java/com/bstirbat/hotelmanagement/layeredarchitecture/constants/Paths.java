@@ -11,6 +11,7 @@ public class Paths {
   public static final String IMAGE_REFERENCES = "/image-references";
   public static final String FACILITIES = "/facilities";
   public static final String BOOKINGS = "/bookings";
+  public static final String REVIEWS = "/reviews";
 
   private Paths() {
 
