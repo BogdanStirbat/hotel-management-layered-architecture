@@ -14,6 +14,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -45,5 +47,11 @@ public class ReviewServiceImpl implements ReviewService {
 
     return reviewRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find review with id %s", id)));
+  }
+
+  @Override
+  public Page<Review> findAll(@NotNull Pageable pageable) {
+
+    return reviewRepository.findAll(pageable);
   }
 }

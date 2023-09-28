@@ -5,6 +5,8 @@ import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Review;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
@@ -13,4 +15,6 @@ public interface ReviewService {
   Review create(@NotNull @Valid ReviewCreateDto createDto, @NotNull User user);
 
   Review getById(@NotNull Long id);
+
+  Page<Review> findAll(@NotNull Pageable pageable);
 }
