@@ -111,6 +111,15 @@ class HotelServiceTest {
   }
 
   @Test
+  void getById_whenNoHotelFound() {
+    // given
+    when(hotelRepository.findById(1L)).thenReturn(Optional.empty());
+
+    // when & then
+    assertThrows(ResourceNotFoundException.class, () -> hotelService.getById(1L));
+  }
+
+  @Test
   void findAll() {
     // given
     Page<Hotel> page = Page.empty();

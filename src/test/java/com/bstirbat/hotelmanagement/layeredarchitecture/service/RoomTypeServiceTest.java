@@ -117,6 +117,15 @@ class RoomTypeServiceTest {
   }
 
   @Test
+  void getById_whenNoRoomTypeFound() {
+    // given
+    when(roomTypeRepository.findById(1L)).thenReturn(Optional.empty());
+
+    // when & then
+    assertThrows(ResourceNotFoundException.class, () -> roomTypeService.getById(1L));
+  }
+
+  @Test
   void findAll() {
     // given
     Page<RoomType> page = Page.empty();

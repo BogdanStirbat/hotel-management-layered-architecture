@@ -103,6 +103,15 @@ class StreetServiceTest {
   }
 
   @Test
+  void getById_whenNoStreetFound() {
+    // given
+    when(streetRepository.findById(1L)).thenReturn(Optional.empty());
+
+    // when & then
+    assertThrows(ResourceNotFoundException.class, () -> streetService.getById(1L));
+  }
+
+  @Test
   void findAll() {
     // given
     Page<Street> page = Page.empty();

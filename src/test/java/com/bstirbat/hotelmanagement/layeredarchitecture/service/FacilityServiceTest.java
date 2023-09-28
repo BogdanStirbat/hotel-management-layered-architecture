@@ -1,11 +1,13 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.bstirbat.hotelmanagement.layeredarchitecture.exceptions.ResourceNotFoundException;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.FacilityCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Facility;
 import com.bstirbat.hotelmanagement.layeredarchitecture.repository.FacilityRepository;
@@ -68,6 +70,15 @@ class FacilityServiceTest {
     // then
     assertEquals(facility.getId(), retrievedFacility.getId());
     assertEquals(facility.getName(), retrievedFacility.getName());
+  }
+
+  @Test
+  void getById_whenNoFacilityFound() {
+    // given
+    when(facilityRepository.findById(1L)).thenReturn(Optional.empty());
+
+    // when & then
+    assertThrows(ResourceNotFoundException.class, () -> facilityService.getById(1L));
   }
 
   @Test

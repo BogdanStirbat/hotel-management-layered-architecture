@@ -128,6 +128,15 @@ class BookingServiceTest {
   }
 
   @Test
+  void getById_whenNoBookingFound() {
+    // given
+    when(bookingRepository.findById(1L)).thenReturn(Optional.empty());
+
+    // when & then
+    assertThrows(ResourceNotFoundException.class, () -> bookingService.getById(1L));
+  }
+
+  @Test
   void findAll() {
     // given
     Page<Booking> page = Page.empty();

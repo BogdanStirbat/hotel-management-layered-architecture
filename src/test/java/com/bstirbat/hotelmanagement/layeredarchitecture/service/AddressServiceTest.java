@@ -97,6 +97,15 @@ class AddressServiceTest {
   }
 
   @Test
+  void getById_whenNoAddressFound() {
+    // given
+    when(addressRepository.findById(1L)).thenReturn(Optional.empty());
+
+    // when & then
+    assertThrows(ResourceNotFoundException.class, () -> addressService.getById(1L));
+  }
+
+  @Test
   void findAll() {
     // given
     Page<Address> page = Page.empty();

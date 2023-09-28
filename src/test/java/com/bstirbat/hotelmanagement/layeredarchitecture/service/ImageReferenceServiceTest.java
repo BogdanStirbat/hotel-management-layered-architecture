@@ -1,11 +1,13 @@
 package com.bstirbat.hotelmanagement.layeredarchitecture.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.bstirbat.hotelmanagement.layeredarchitecture.exceptions.ResourceNotFoundException;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.ImageReferenceCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.ImageReference;
 import com.bstirbat.hotelmanagement.layeredarchitecture.repository.ImageReferenceRepository;
@@ -73,6 +75,15 @@ class ImageReferenceServiceTest {
     assertEquals(imageReference.getId(), retrievedImageReference.getId());
     assertEquals(imageReference.getUrl(), retrievedImageReference.getUrl());
     assertEquals(imageReference.getTitle(), retrievedImageReference.getTitle());
+  }
+
+  @Test
+  void getById_whenNoImageReferenceFound() {
+    // given
+    when(imageReferenceRepository.findById(1L)).thenReturn(Optional.empty());
+
+    // when & then
+    assertThrows(ResourceNotFoundException.class, () -> imageReferenceService.getById(1L));
   }
 
   @Test
