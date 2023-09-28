@@ -2,6 +2,7 @@ package com.bstirbat.hotelmanagement.layeredarchitecture.service.impl;
 
 import static com.bstirbat.hotelmanagement.layeredarchitecture.utils.ExceptionWrapperUtils.wrapWithInvalidDataException;
 
+import com.bstirbat.hotelmanagement.layeredarchitecture.exceptions.ResourceNotFoundException;
 import com.bstirbat.hotelmanagement.layeredarchitecture.mapper.ReviewMapper;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.dto.request.ReviewCreateDto;
 import com.bstirbat.hotelmanagement.layeredarchitecture.model.entity.Review;
@@ -37,5 +38,12 @@ public class ReviewServiceImpl implements ReviewService {
     review.setReviewDate(LocalDate.now());
 
     return reviewRepository.save(review);
+  }
+
+  @Override
+  public Review getById(@NotNull Long id) {
+
+    return reviewRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find review with id %s", id)));
   }
 }

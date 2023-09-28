@@ -11,4 +11,6 @@ import org.springframework.validation.annotation.Validated;
 public interface ReviewService {
 
   Review create(@NotNull @Valid ReviewCreateDto createDto, @NotNull User user);
+
+  Review getById(@NotNull Long id);
 }

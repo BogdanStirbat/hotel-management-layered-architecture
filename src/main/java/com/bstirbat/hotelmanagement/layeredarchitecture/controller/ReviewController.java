@@ -14,6 +14,8 @@ import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,5 +46,14 @@ public class ReviewController {
         .toUri();
 
     return ResponseEntity.created(resourceLocation).body(dto);
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<ReviewDto> getById(@PathVariable Long id) {
+    Review review = reviewService.getById(id);
+
+    ReviewDto dto = ReviewMapper.INSTANCE.toDto(review);
+
+    return ResponseEntity.ok(dto);
   }
 }
