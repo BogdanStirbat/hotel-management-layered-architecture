@@ -67,7 +67,7 @@ public class ReviewController {
       @RequestParam(name = "page", defaultValue = "0") Integer page,
       @RequestParam(name = "size", defaultValue = "20") Integer size) {
 
-    Pageable pageable = PageRequest.of(page, size, Sort.by("checkInDate"));
+    Pageable pageable = PageRequest.of(page, size, Sort.by("title"));
 
     Page<ReviewDto> bookingDtos = reviewService.findAll(pageable)
         .map(ReviewMapper.INSTANCE::toDto);

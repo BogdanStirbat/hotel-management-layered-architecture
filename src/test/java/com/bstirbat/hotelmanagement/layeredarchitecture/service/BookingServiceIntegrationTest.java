@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-class BookingServiceIntegrationTest  extends AbstractIntegrationTest {
+class BookingServiceIntegrationTest extends AbstractIntegrationTest {
 
   @Autowired
   private CountryService countryService;
@@ -56,6 +56,7 @@ class BookingServiceIntegrationTest  extends AbstractIntegrationTest {
   private BookingService bookingService;
 
   private RoomType roomType;
+  private User user;
 
   @BeforeEach
   public void setUp() {
@@ -76,6 +77,8 @@ class BookingServiceIntegrationTest  extends AbstractIntegrationTest {
         .withNumberOfAvailableRooms(4)
         .build();
     roomType = roomTypeService.create(roomTypeCreateDto);
+
+    user = userService.getByEmail("admin@test.com");
   }
 
   @Test
@@ -86,8 +89,6 @@ class BookingServiceIntegrationTest  extends AbstractIntegrationTest {
         .withCheckInDate(LocalDate.of(2023, Month.OCTOBER, 14))
         .withCheckOutDate(LocalDate.of(2023, Month.OCTOBER, 16))
         .build();
-
-    User user = userService.getByEmail("admin@test.com");
 
     // when
     Booking booking = bookingService.create(createDto, user);
@@ -109,8 +110,6 @@ class BookingServiceIntegrationTest  extends AbstractIntegrationTest {
         .withCheckOutDate(LocalDate.of(2023, Month.OCTOBER, 16))
         .build();
 
-    User user = userService.getByEmail("admin@test.com");
-
     // when & then
     assertThrows(InvalidDataException.class,
         () -> bookingService.create(createDto, user));
@@ -118,8 +117,6 @@ class BookingServiceIntegrationTest  extends AbstractIntegrationTest {
 
   @Test
   void create_whenInvalidDto() {
-    // given
-    User user = userService.getByEmail("admin@test.com");
 
     // when
     ConstraintViolationException ex = assertThrows(ConstraintViolationException.class,
@@ -133,8 +130,6 @@ class BookingServiceIntegrationTest  extends AbstractIntegrationTest {
 
   @Test
   void create_whenNullDto() {
-    // given
-    User user = userService.getByEmail("admin@test.com");
 
     // when & then
     assertThrows(ConstraintViolationException.class,
@@ -163,8 +158,6 @@ class BookingServiceIntegrationTest  extends AbstractIntegrationTest {
         .withCheckInDate(LocalDate.of(2023, Month.OCTOBER, 14))
         .withCheckOutDate(LocalDate.of(2023, Month.OCTOBER, 16))
         .build();
-
-    User user = userService.getByEmail("admin@test.com");
 
     Booking booking = bookingService.create(createDto, user);
 
@@ -199,8 +192,6 @@ class BookingServiceIntegrationTest  extends AbstractIntegrationTest {
         .withCheckInDate(LocalDate.of(2023, Month.OCTOBER, 14))
         .withCheckOutDate(LocalDate.of(2023, Month.OCTOBER, 16))
         .build();
-
-    User user = userService.getByEmail("admin@test.com");
 
     Booking booking = bookingService.create(createDto, user);
 
